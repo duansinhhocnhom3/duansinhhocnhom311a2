@@ -5,162 +5,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hành Trình Trồng Cây - Theo Dõi Sự Phát Triển Qua Thời Gian</title>
     <meta name="description" content="Khám phá hành trình trồng cây của chúng tôi thông qua bộ sưu tập ảnh theo thời gian. Theo dõi sự phát triển và tăng trưởng của cây từng ngày.">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"></noscript>
     <style>
-        :root {
-            --color-primary: #10B981;
-            --color-primary-dark: #059669;
-            --color-background: #F9FAFB;
-            --color-text: #1F2937;
-            --color-text-light: #6B7280;
-            --color-white: #FFFFFF;
+        .lazy-image {
+            transition: opacity 0.3s;
+            opacity: 0;
         }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: var(--color-background);
-            color: var(--color-text);
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+        .lazy-image.loaded {
+            opacity: 1;
         }
-        header {
-            background-color: var(--color-primary);
-            color: var(--color-white);
-            padding: 1rem;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1rem;
+        .fade-in {
+            animation: fadeIn 0.3s ease-out forwards;
         }
-        h1 {
-            font-size: 1.5rem;
-            margin: 0;
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
         }
-        main {
-            flex-grow: 1;
-            padding: 2rem 0;
-        }
-        #timeline {
-            display: flex;
-            overflow-x: auto;
-            padding-bottom: 1rem;
-            margin-bottom: 2rem;
-            scroll-snap-type: x mandatory;
+        .scrollbar-hide {
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
-        #timeline::-webkit-scrollbar {
-            display: none;
-        }
-        .timeline-item {
-            flex-shrink: 0;
-            padding: 0.5rem 1rem;
-            margin: 0 0.25rem;
-            background-color: var(--color-white);
-            color: var(--color-primary);
-            border: 1px solid var(--color-primary);
-            border-radius: 9999px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            scroll-snap-align: start;
-        }
-        .timeline-item:hover, .timeline-item.active {
-            background-color: var(--color-primary);
-            color: var(--color-white);
-        }
-        #gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1rem;
-        }
-        .gallery-item {
-            position: relative;
-            aspect-ratio: 1;
-            overflow: hidden;
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-        .gallery-item:hover {
-            transform: scale(1.05);
-        }
-        .gallery-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: opacity 0.3s ease;
-        }
-        .loading {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 200px;
-        }
-        .spinner {
-            border: 4px solid rgba(0,0,0,0.1);
-            border-left-color: var(--color-primary);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        #scrollToTop {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: var(--color-primary);
-            color: var(--color-white);
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            font-size: 24px;
-            cursor: pointer;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            transition: background-color 0.3s ease;
-        }
-        #scrollToTop:hover {
-            background-color: var(--color-primary-dark);
-        }
-        .fade-in {
-            animation: fadeIn 0.5s ease-out forwards;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
     </style>
 </head>
-<body>
-    <header>
-        <div class="container">
-            <h1>Hành Trình Trồng Cây Ớt của nhóm 3</h1>
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+    <header class="bg-green-600 text-white py-4 px-4 sm:px-6 lg:px-8 sticky top-0 z-10 shadow-md">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <h1 class="text-2xl sm:text-3xl font-bold">Hành Trình Trồng Cây Ớt của nhóm 3</h1>
+            <button id="scrollToTop" class="bg-white text-green-600 p-2 rounded-full shadow-lg transition-all duration-300 ease-in-out transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                </svg>
+            </button>
         </div>
     </header>
 
-    <main class="container">
-        <div id="timeline"></div>
-        <div id="gallery"></div>
+    <main class="flex-grow container mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <div id="timeline" class="flex overflow-x-auto pb-4 mb-6 scrollbar-hide snap-x snap-mandatory">
+            <!-- Timeline items will be added here -->
+        </div>
+        <div id="gallery" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <!-- Gallery items will be added here -->
+        </div>
     </main>
-
-    <button id="scrollToTop" aria-label="Cuộn lên đầu trang">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="18 15 12 9 6 15"></polyline>
-        </svg>
-    </button>
 
     <script>
         // GitHub Pages repository name - IMPORTANT: Update this to match your repository name
@@ -177,7 +67,7 @@
             '1910': ['z6045398061389_2b8707827e24673f1b1cd166c7fddb92.jpg', 'z6045398343442_51999a322245bd1bbe12c15952921ce3.jpg', 'z6045398346365_900b7522f96826ecf644d6c537541d28.jpg', 'z6045398357979_16acafbcaac56f5b194c51c502ec0455.jpg', 'z6045398357983_71056e038fd99de97227790f01d656b9.jpg'],
             '2310': ['z6045399748567_78a7b3fbc6f1541004f198474571fc99.jpg', 'z6045399851209_ac0efcf02cbe41d01c0656952764eae3.jpg', 'z6045399855902_2b3b2f55291e22fa17947eb460000ede.jpg'],
             '2410': ['z6045403234518_bef00eaaa27e781ed69971498fdff42e.jpg', 'z6045403243962_b7f51687ccdbe1b22bb9cba78ab0f40a.jpg', 'z6045403306690_a754bb3b6c94a8adde11100c5c468340.jpg', 'z6045403309663_def3134bfe1689b4603a518a22315608.jpg', 'z6045403314294_07409195a9879d24d7cad5097b580eb3.jpg'],
-            '2810': ['z6045406548093_140b5aeac13f33843751d5334865a5ea.jpg', 'z6045406550624_ad0237236f27b2bbb3f715a04b68ba40.jpg', 'z6045406555298_decd79442122be95a3f69e2816a8074a.jpg', 'z6045406557196_1af5bc409baea04006e566fd308c7723.jpg', 'z6045406562320_5ad623b0f3d1a4002725aafe00872247.jpg', 'z6045406651121_e5df9cad5f1754ed1b8a7baa1df7955b.jpg', 'z6045406652662_273ecb632aa0728258259b4b1900ae09.jpg', 'z6045406655229_c82a604b0054b9571b65ae20717f4af3.jpg'],
+            '2810': ['z6045406548093_140b5aeac13f33843751d5334865a5ea.jpg', 'z6045406550624_ad0237236f27b2bbb3f715a04b68ba40.jpg', 'z6045406555298_decd79442122be95a3f715a04b68ba40.jpg', 'z6045406557196_1af5bc409baea04006e566fd308c7723.jpg', 'z6045406562320_5ad623b0f3d1a4002725aafe00872247.jpg', 'z6045406651121_e5df9cad5f1754ed1b8a7baa1df7955b.jpg', 'z6045406652662_273ecb632aa0728258259b4b1900ae09.jpg', 'z6045406655229_c82a604b0054b9571b65ae20717f4af3.jpg'],
             '511': ['z6045409049218_394d415a315882d3e1750494272da85e.jpg', 'z6045409051826_b9304c4c4a87c96ffcc5fca2e00c9ecd.jpg', 'z6045409055385_24e135f1a4cdf98a1d107e9f872ea958.jpg', 'z6045409057595_c3920eb35bb3baf2261bb8148577bbb8.jpg', 'z6045409062723_2ddab87e7d11b7ccc100f29df0f5f8fb.jpg', 'z6045409064492_679c38508a73f09fa6bb114ea587695f.jpg', 'z6045409068692_9961753e374527fea8ea64b0b15e4026.jpg', 'z6045409070278_17b1c39bd0b521ce4d535d03e0131e4a.jpg', 'z6045409074652_9b8b114c2929dac3419fe5d6ff85c2cd.jpg', 'z6045409141449_cf4156fc60cfee6a8fac84cc3d014283.jpg', 'z6045409149347_9296668960f5e86b1c9816d45d06e04a.jpg'],
             '1211': ['z6045411623212_0269bca09f55bd31a21b7d4a1d99a6b6.jpg', 'z6045411626766_c30c7d8ac73ef6be3ce2ff4f0f03df50.jpg', 'z6045411639726_8e8c49dffdb5f8453f33cbac168280f1.jpg', 'z6045411639728_adf717f32442baef0c90729adeb2447b.jpg', 'z6045411677204_9555a678cbfb18d3350a5bfae0c3b963.jpg', 'z6045411677360_2b13dc4fffb17e0fdf4c5f1743255c14.jpg'],
             '1711': ['z6045412765862_c8d18e27817264f5b38064fbf8488e8d.jpg', 'z6045412768295_668cbb83ed48decefe8a9a57380e3b87.jpg', 'z6045412919763_355bc0d4c6157be6e7dd13a8d5b291cd.jpg', 'z6045412921555_71250421459ba74146280c205dea4a42.jpg']
@@ -203,110 +93,259 @@
         function createTimelineItem(date) {
             const button = document.createElement('button');
             button.textContent = formatDate(date);
-            button.className = 'timeline-item';
-            button.addEventListener('click', () => showImages(date));
+            button.className = 'flex-shrink-0 px-4 py-2 m-1 rounded-full text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 bg-white text-green-600 hover:bg-green-600 hover:text-white transition duration-300 ease-in-out transform hover:scale-105 snap-start';
+            button.addEventListener('click', () => requestAnimationFrame(() => showImages(date)));
             return button;
         }
 
+        function createImageElement(date, imageName, index) {
+            const item = document.createElement('div');
+            item.className = 'relative aspect-w-1 aspect-h-1 rounded-lg overflow-hidden shadow-lg transition-transform duration-300 ease-in-out hover:scale-105 fade-in';
+            item.style.animationDelay = `${index * 30}ms`;
+            
+            const img = new Image();
+            img.src = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E`;
+            img.dataset.src = `${repoName}/images/${date}/${imageName}`;
+            img.alt = `Hình ảnh cây ngày ${formatDate(date)}`;
+            img.className = 'w-full h-full object-cover lazy-image';
+            
+            item.appendChild(img);
+            return item;
+        }
+
+        let currentObserver = null;
+
         function showImages(date) {
-            timeline.querySelectorAll('.timeline-item').forEach(btn => {
-                btn.classList.toggle('active', btn.textContent === formatDate(date));
+            if (currentObserver) {
+                currentObserver.disconnect();
+            }
+
+            timeline.querySelectorAll('button').forEach(btn => {
+                if (btn.textContent === formatDate(date)) {
+                    btn.classList.add('bg-green-600', 'text-white');
+                } else {
+                    btn.classList.remove('bg-green-600', 'text-white');
+                }
             });
 
-            gallery.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+            gallery.innerHTML = '<div class="col-span-full flex justify-center items-center"><div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div></div>';
 
             const images = imageData[date] || [];
             
             if (images.length === 0) {
-                gallery.innerHTML = '<p class="text-center text-gray-500">Không có ảnh cho ngày này.</p>';
+                gallery.innerHTML = '<p class="col-span-full text-center text-gray-500">Không có ảnh cho ngày này.</p>';
                 return;
             }
 
             const fragment = document.createDocumentFragment();
             images.forEach((imageName, index) => {
-                const item = document.createElement('div');
-                item.className = 'gallery-item';
-                
-                const img = new Image();
-                img.src = `${repoName}/images/${date}/${imageName}`;
-                img.alt = `Hình ảnh cây ngày ${formatDate(date)}`;
-                img.loading = 'lazy';
-                img.style.opacity = '0';
-                
-                img.onload = () => {
-                    img.style.opacity = '1';
-                    item.classList.add('fade-in');
-                    item.style.animationDelay = `${index * 100}ms`;
-                };
-                
-                item.appendChild(img);
+                const item = createImageElement(date, imageName, index);
                 fragment.appendChild(item);
             });
 
             gallery.innerHTML = '';
             gallery.appendChild(fragment);
-        }
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const img = entry.target.querySelector('img');
-                    if (img && img.dataset.src) {
-                        img.src = img.dataset.src;
-                        img.removeAttribute('data-src');
+            const lazyImages = document.querySelectorAll('.lazy-image');
+            currentObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const lazyImage = entry.target;
+                        lazyImage.src = lazyImage.dataset.src;
+                        lazyImage.classList.add('loaded');
+                        observer.unobserve(lazyImage);
                     }
-                    observer.unobserve(entry.target);
-                }
+                });
+            }, {
+                rootMargin: '200px',
+                threshold: 0.1
             });
-        }, {
-            rootMargin: '100px',
-        });
+
+            lazyImages.forEach(lazyImage => {
+                currentObserver.observe(lazyImage);
+            });
+
+            preloadNextDateImages(date);
+        }
 
         dates.forEach(date => {
             const item = createTimelineItem(date);
             timeline.appendChild(item);
         });
 
-        // Show first date's images by default
         showImages(dates[0]);
 
         scrollToTopBtn.addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
+        let lastScrollTop = 0;
         window.addEventListener('scroll', () => {
-            scrollToTopBtn.style.display = window.pageYOffset > 100 ? 'flex' : 'none';
-        });
+            const st = window.pageYOffset || document.documentElement.scrollTop;
+            if (st > lastScrollTop && st > 100) {
+                scrollToTopBtn.classList.remove('hidden');
+            } else if (st < lastScrollTop || st <= 100) {
+                scrollToTopBtn.classList.add('hidden');
+            }
+            lastScrollTop = st <= 0 ? 0 : st;
+        }, { passive: true });
 
-        // Preload next set of images
-        let currentIndex = 0;
-        function preloadNextImages() {
+        function preloadNextDateImages(currentDate) {
+            const currentIndex = dates.indexOf(currentDate);
             if (currentIndex < dates.length - 1) {
                 const nextDate = dates[currentIndex + 1];
                 const nextImages = imageData[nextDate] || [];
-                nextImages.forEach(imageName => {
+                nextImages.slice(0, 4).forEach(imageName => {
                     const img = new Image();
                     img.src = `${repoName}/images/${nextDate}/${imageName}`;
                 });
-                currentIndex++;
             }
         }
 
-        // Start preloading after initial load
-        window.addEventListener('load', preloadNextImages);
-
-        // Optimize scroll performance
-        let ticking = false;
-        window.addEventListener('scroll', () => {
-            if (!ticking) {
-                window.requestAnimationFrame(() => {
-                    const scrollPosition = window.pageYOffset;
-                    scrollToTopBtn.style.display = scrollPosition > 100 ? 'flex' : 'none';
-                    ticking = false;
-                });
-                ticking = true;
+        window.addEventListener('load', () => {
+            if ('connection' in navigator && navigator.connection.saveData) {
+                console.log('Data saver is enabled. Disabling preloading.');
+                return;
             }
+            preloadNextDateImages(dates[0]);
         });
+
+        // Implement progressive image loading
+        function loadProgressiveImage(img) {
+            const lowQualitySrc = img.dataset.src.replace('.jpg', '-low.jpg');
+            const highQualitySrc = img.dataset.src;
+
+            // Load low quality image
+            img.src = lowQualitySrc;
+            img.classList.add('blur-sm');
+
+            // Load high quality image
+            const highQualityImg = new Image();
+            highQualityImg.src = highQualitySrc;
+            highQualityImg.onload = () => {
+                img.src = highQualitySrc;
+                img.classList.remove('blur-sm');
+                img.classList.add('loaded');
+            };
+        }
+
+        // Update the createImageElement function
+        function createImageElement(date, imageName, index) {
+            const item = document.createElement('div');
+            item.className = 'relative aspect-w-1 aspect-h-1 rounded-lg overflow-hidden shadow-lg transition-transform duration-300 ease-in-out hover:scale-105 fade-in';
+            item.style.animationDelay = `${index * 30}ms`;
+            
+            const img = new Image();
+            img.dataset.src = `${repoName}/images/${date}/${imageName}`;
+            img.alt = `Hình ảnh cây ngày ${formatDate(date)}`;
+            img.className = 'w-full h-full object-cover lazy-image transition-all duration-300';
+            
+            item.appendChild(img);
+            return item;
+        }
+
+        // Update the IntersectionObserver callback
+        currentObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const lazyImage = entry.target;
+                    loadProgressiveImage(lazyImage);
+                    observer.unobserve(lazyImage);
+                }
+            });
+        }, {
+            rootMargin: '200px',
+            threshold: 0.1
+        });
+
+        // Implement image compression on the server-side (instructions for server)
+        // 1. Use a tool like ImageMagick to create low-quality versions of images
+        // 2. For each image, create a low-quality version with the suffix "-low.jpg"
+        // 3. Optimize all images using a tool like mozjpeg or WebP for modern browsers
+
+        // Add support for WebP images
+        function supportsWebP() {
+            const elem = document.createElement('canvas');
+            if (!!(elem.getContext && elem.getContext('2d'))) {
+                return elem.toDataURL('image/webp').indexOf('data:image/webp') === 0;
+            }
+            return false;
+        }
+
+        if (supportsWebP()) {
+            // Update image URLs to use WebP format
+            Object.keys(imageData).forEach(date => {
+                imageData[date] = imageData[date].map(img => img.replace('.jpg', '.webp'));
+            });
+        }
+
+        // Implement image lazy loading with IntersectionObserver
+        const lazyLoadImages = () => {
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const lazyImage = entry.target;
+                        lazyImage.src = lazyImage.dataset.src;
+                        lazyImage.classList.remove("lazy-image");
+                        imageObserver.unobserve(lazyImage);
+                    }
+                });
+            });
+
+            const lazyImages = document.querySelectorAll(".lazy-image");
+            lazyImages.forEach(img => imageObserver.observe(img));
+        };
+
+        // Call lazyLoadImages after the images are added to the DOM
+        const originalShowImages = showImages;
+        showImages = (date) => {
+            originalShowImages(date);
+            lazyLoadImages();
+        };
+
+        // Preload images for smoother navigation
+        const preloadImages = (images) => {
+            images.forEach(img => {
+                const image = new Image();
+                image.src = img;
+            });
+        };
+
+        // Update preloadNextDateImages function
+        function preloadNextDateImages(currentDate) {
+            const currentIndex = dates.indexOf(currentDate);
+            if (currentIndex < dates.length - 1) {
+                const nextDate = dates[currentIndex + 1];
+                const nextImages = imageData[nextDate] || [];
+                preloadImages(nextImages.slice(0, 4).map(img => `${repoName}/images/${nextDate}/${img}`));
+            }
+        }
+
+        // Add touch events for mobile swipe navigation
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        gallery.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, false);
+
+        gallery.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, false);
+
+        function handleSwipe() {
+            const currentDate = dates[dates.findIndex(date => document.querySelector(`button.bg-green-600`).textContent === formatDate(date))];
+            const currentIndex = dates.indexOf(currentDate);
+
+            if (touchEndX < touchStartX && currentIndex < dates.length - 1) {
+                // Swipe left, show next date
+                showImages(dates[currentIndex + 1]);
+            } else if (touchEndX > touchStartX && currentIndex > 0) {
+                // Swipe right, show previous date
+                showImages(dates[currentIndex - 1]);
+            }
+        }
     </script>
 </body>
 </html>
