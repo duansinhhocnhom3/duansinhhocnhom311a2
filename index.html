@@ -9,65 +9,92 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .fade-in {
-            animation: fadeIn 0.3s ease-out forwards;
+            animation: fadeIn 0.5s ease-out forwards;
         }
-        .scrollbar-hide::-webkit-scrollbar {
-            display: none;
+        .image-container {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
         }
-        .scrollbar-hide {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
+        .image-container img {
+            transition: transform 0.3s ease-in-out;
         }
-        .custom-shadow {
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        .image-container:hover img {
+            transform: scale(1.05);
+        }
+        .image-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        .image-container:hover .image-overlay {
+            transform: translateY(0);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: rgba(156, 163, 175, 0.5);
+            border-radius: 3px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background-color: rgba(229, 231, 235, 0.5);
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
-    <header class="bg-green-600 text-white py-4 px-4 sm:px-6 lg:px-8 sticky top-0 z-10 shadow-md">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <h1 class="text-2xl sm:text-3xl font-bold">Hành Trình Trồng Cây Ớt của Nhóm 3</h1>
-            <div class="flex space-x-2">
-                <button id="toggleView" class="bg-green-500 hover:bg-green-400 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-300">
-                    <i class="fas fa-th-large"></i>
-                </button>
-                <button id="toggleSlideshow" class="bg-green-500 hover:bg-green-400 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-300">
-                    <i class="fas fa-play"></i>
-                </button>
-            </div>
+<body class="bg-gray-100 text-gray-800 min-h-screen flex flex-col">
+    <header class="bg-green-600 text-white py-6 px-4 sm:px-6 lg:px-8 shadow-lg">
+        <div class="max-w-7xl mx-auto flex flex-col items-center">
+            <h1 class="text-3xl sm:text-4xl font-bold mb-4 text-center">Hành Trình Trồng Cây Ớt của Nhóm 3</h1>
+            <p class="text-lg text-center max-w-2xl">Khám phá sự phát triển của cây ớt qua thời gian</p>
         </div>
     </header>
 
-    <main class="flex-grow container mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        <div id="timeline" class="flex overflow-x-auto pb-4 mb-6 scrollbar-hide snap-x snap-mandatory">
-            <!-- Timeline items will be added here -->
+    <nav class="bg-white shadow-md py-4 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center">
+                <div class="flex space-x-4 overflow-x-auto custom-scrollbar" id="dateFilter">
+                    <!-- Date buttons will be added here dynamically -->
+                </div>
+                <button id="viewToggle" class="bg-green-500 hover:bg-green-400 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-300">
+                    <i class="fas fa-th-large"></i>
+                </button>
+            </div>
         </div>
-        <div id="gallery" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            <!-- Gallery items will be added here -->
+    </nav>
+
+    <main class="flex-grow container mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <div id="gallery" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- Gallery items will be added here dynamically -->
         </div>
     </main>
 
-    
-
-    <div id="lightbox" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden">
-        <div class="max-w-4xl w-full p-4">
-            <img id="lightboxImage" src="" alt="Enlarged image" class="max-h-[80vh] w-auto mx-auto">
-            <button id="closeLightbox" class="absolute top-4 right-4 text-white text-2xl">&times;</button>
-            <button id="prevSlide" class="absolute top-1/2 left-4 text-white text-4xl transform -translate-y-1/2"><i class="fas fa-chevron-left"></i></button>
-            <button id="nextSlide" class="absolute top-1/2 right-4 text-white text-4xl transform -translate-y-1/2"><i class="fas fa-chevron-right"></i></button>
+    <footer class="bg-green-600 text-white py-4 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto text-center">
+            <p>&copy; 2023 Nhóm 3 - Hành Trình Trồng Cây Ớt</p>
         </div>
+    </footer>
+
+    <div id="lightbox" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 hidden">
+        <button id="closeLightbox" class="absolute top-4 right-4 text-white text-4xl hover:text-gray-300">&times;</button>
+        <button id="prevImage" class="absolute left-4 top-1/2 transform -translate-y-1/2 text-white text-4xl hover:text-gray-300"><i class="fas fa-chevron-left"></i></button>
+        <button id="nextImage" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-white text-4xl hover:text-gray-300"><i class="fas fa-chevron-right"></i></button>
+        <img id="lightboxImage" src="" alt="Enlarged image" class="max-h-[90vh] max-w-[90vw] object-contain">
+        <p id="imageCaption" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white text-lg"></p>
     </div>
 
-    <button id="scrollToTop" class="fixed bottom-4 right-4 bg-green-500 hover:bg-green-400 text-white font-bold p-2 rounded-full transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-300 hidden">
-        <i class="fas fa-arrow-up"></i>
-    </button>
-
     <script>
-        // GitHub Pages repository name - IMPORTANT: Update this to match your repository name
         const repoName = '/duansinhhocnhom311a2';
         
         const imageData = {
@@ -94,22 +121,19 @@
             return parseInt(a.slice(0, -2)) - parseInt(b.slice(0, -2));
         });
 
-        const timeline = document.getElementById('timeline');
+        const dateFilter = document.getElementById('dateFilter');
         const gallery = document.getElementById('gallery');
-        const scrollToTopBtn = document.getElementById('scrollToTop');
-        const toggleViewBtn = document.getElementById('toggleView');
-        const toggleSlideshowBtn = document.getElementById('toggleSlideshow');
+        const viewToggle = document.getElementById('viewToggle');
         const lightbox = document.getElementById('lightbox');
         const lightboxImage = document.getElementById('lightboxImage');
+        const imageCaption = document.getElementById('imageCaption');
         const closeLightbox = document.getElementById('closeLightbox');
-        const prevSlide = document.getElementById('prevSlide');
-        const nextSlide = document.getElementById('nextSlide');
+        const prevImage = document.getElementById('prevImage');
+        const nextImage = document.getElementById('nextImage');
 
-        let isGridView = true;
-        let isSlideshow = false;
-        let currentSlideIndex = 0;
-        let slideshowInterval;
-        let allImages = [];
+        let currentView = 'grid';
+        let currentImages = [];
+        let currentImageIndex = 0;
 
         function formatDate(dateString) {
             const day = dateString.slice(0, -2);
@@ -117,16 +141,16 @@
             return `${day}/${month}`;
         }
 
-        function createTimelineItem(date) {
+        function createDateButton(date) {
             const button = document.createElement('button');
             button.textContent = formatDate(date);
-            button.className = 'flex-shrink-0 px-4 py-2 m-1 rounded-full text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 bg-white text-green-600 hover:bg-green-50 transition duration-300 ease-in-out transform hover:scale-105 snap-start custom-shadow';
+            button.className = 'px-4 py-2 rounded-full text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 bg-white text-green-600 hover:bg-green-50 transition duration-300 ease-in-out transform hover:scale-105';
             button.addEventListener('click', () => showImages(date));
             return button;
         }
 
         function showImages(date) {
-            timeline.querySelectorAll('button').forEach(btn => {
+            dateFilter.querySelectorAll('button').forEach(btn => {
                 if (btn.textContent === formatDate(date)) {
                     btn.classList.add('bg-green-600', 'text-white');
                 } else {
@@ -137,6 +161,7 @@
             gallery.innerHTML = '<div class="col-span-full text-center"><div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-green-500"></div></div>';
 
             const images = imageData[date] || [];
+            currentImages = images;
             
             setTimeout(() => {
                 gallery.innerHTML = '';
@@ -148,135 +173,93 @@
 
                 images.forEach((imageName, index) => {
                     const item = document.createElement('div');
-                    item.className = isGridView ? 'relative aspect-w-1 aspect-h-1 rounded-lg overflow-hidden shadow-lg transition-transform duration-300 ease-in-out hover:scale-105' : 'mb-4';
+                    item.className = 'image-container rounded-lg overflow-hidden shadow-lg transition-transform duration-300 ease-in-out hover:shadow-xl';
                     
                     const img = document.createElement('img');
                     img.src = `${repoName}/images/${date}/${imageName}`;
                     img.alt = `Hình ảnh cây ngày ${formatDate(date)}`;
-                    img.className = isGridView ? 'w-full h-full object-cover opacity-0 cursor-pointer' : 'w-full rounded-lg shadow-lg opacity-0 cursor-pointer';
-                    img.dataset.index = allImages.length + index;
+                    img.className = 'w-full h-full object-cover opacity-0';
+                    img.style.aspectRatio = '1 / 1';
+                    
+                    const overlay = document.createElement('div');
+                    overlay.className = 'image-overlay';
+                    overlay.textContent = `Ngày ${formatDate(date)}`;
                     
                     img.onload = () => {
                         img.classList.remove('opacity-0');
                         img.classList.add('fade-in');
                     };
 
-                    img.addEventListener('click', () => openLightbox(img.dataset.index));
-                    
                     item.appendChild(img);
+                    item.appendChild(overlay);
+                    item.addEventListener('click', () => openLightbox(index));
                     gallery.appendChild(item);
                 });
 
-                allImages = allImages.concat(images.map(imageName => `${repoName}/images/${date}/${imageName}`));
+                updateGalleryLayout();
             }, 500);
         }
 
-        function openLightbox(index) {
-            currentSlideIndex = parseInt(index);
-            updateLightboxImage();
-            lightbox.classList.remove('hidden');
-            if (isSlideshow) {
-                startSlideshow();
+        function updateGalleryLayout() {
+            if (currentView === 'grid') {
+                gallery.className = 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6';
+            } else {
+                gallery.className = 'flex flex-col space-y-6';
             }
-        }
-
-        function updateLightboxImage() {
-            lightboxImage.src = allImages[currentSlideIndex];
-            lightboxImage.alt = `Slide ${currentSlideIndex + 1}`;
         }
 
         function toggleView() {
-            isGridView = !isGridView;
-            if (isGridView) {
-                gallery.classList.remove('flex', 'flex-col');
-                gallery.classList.add('grid', 'grid-cols-1', 'sm:grid-cols-2', 'md:grid-cols-3', 'lg:grid-cols-4', 'gap-4');
-                toggleViewBtn.innerHTML = '<i class="fas fa-th-large"></i>';
-            } else {
-                gallery.classList.remove('grid', 'grid-cols-1', 'sm:grid-cols-2', 'md:grid-cols-3', 'lg:grid-cols-4', 'gap-4');
-                gallery.classList.add('flex', 'flex-col');
-                toggleViewBtn.innerHTML = '<i class="fas fa-list"></i>';
-            }
-            showImages(dates[dates.length - 1]);
+            currentView = currentView === 'grid' ? 'list' : 'grid';
+            viewToggle.innerHTML = currentView === 'grid' ? '<i class="fas fa-th-large"></i>' : '<i class="fas fa-list"></i>';
+            updateGalleryLayout();
         }
 
-        function toggleSlideshow() {
-            isSlideshow = !isSlideshow;
-            if (isSlideshow) {
-                toggleSlideshowBtn.innerHTML = '<i class="fas fa-pause"></i>';
-                startSlideshow();
-            } else {
-                toggleSlideshowBtn.innerHTML = '<i class="fas fa-play"></i>';
-                stopSlideshow();
-            }
+        function openLightbox(index) {
+            currentImageIndex = index;
+            updateLightboxImage();
+            lightbox.classList.remove('hidden');
         }
 
-        function startSlideshow() {
-            slideshowInterval = setInterval(() => {
-                currentSlideIndex = (currentSlideIndex + 1) % allImages.length;
-                updateLightboxImage();
-            }, 3000);
+        function updateLightboxImage() {
+            const currentDate = dates.find(date => imageData[date].includes(currentImages[currentImageIndex]));
+            const imageSrc = `${repoName}/images/${currentDate}/${currentImages[currentImageIndex]}`;
+            lightboxImage.src = imageSrc;
+            imageCaption.textContent = `Ngày ${formatDate(currentDate)} - Ảnh ${currentImageIndex + 1} / ${currentImages.length}`;
         }
 
-        function stopSlideshow() {
-            clearInterval(slideshowInterval);
+        function closeLightboxHandler() {
+            lightbox.classList.add('hidden');
         }
 
-        function prevImage() {
-            currentSlideIndex = (currentSlideIndex - 1 + allImages.length) % allImages.length;
+        function prevImageHandler() {
+            currentImageIndex = (currentImageIndex - 1 + currentImages.length) % currentImages.length;
             updateLightboxImage();
         }
 
-        function nextImage() {
-            currentSlideIndex = (currentSlideIndex + 1) % allImages.length;
+        function nextImageHandler() {
+            currentImageIndex = (currentImageIndex + 1) % currentImages.length;
             updateLightboxImage();
         }
 
         dates.forEach(date => {
-            const item = createTimelineItem(date);
-            timeline.appendChild(item);
+            const button = createDateButton(date);
+            dateFilter.appendChild(button);
+        });
+
+        viewToggle.addEventListener('click', toggleView);
+        closeLightbox.addEventListener('click', closeLightboxHandler);
+        prevImage.addEventListener('click', prevImageHandler);
+        nextImage.addEventListener('click', nextImageHandler);
+
+        document.addEventListener('keydown', (e) => {
+            if (!lightbox.classList.contains('hidden')) {
+                if (e.key === 'ArrowLeft') prevImageHandler();
+                if (e.key === 'ArrowRight') nextImageHandler();
+                if (e.key === 'Escape') closeLightboxHandler();
+            }
         });
 
         showImages(dates[dates.length - 1]);
-
-        scrollToTopBtn.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-
-        window.addEventListener('scroll', () => {
-            if (window.pageYOffset > 100) {
-                scrollToTopBtn.classList.remove('hidden');
-            } else {
-                scrollToTopBtn.classList.add('hidden');
-            }
-        });
-
-        toggleViewBtn.addEventListener('click', toggleView);
-        toggleSlideshowBtn.addEventListener('click', toggleSlideshow);
-
-        closeLightbox.addEventListener('click', () => {
-            lightbox.classList.add('hidden');
-            stopSlideshow();
-        });
-
-        lightbox.addEventListener('click', (e) => {
-            if (e.target === lightbox) {
-                lightbox.classList.add('hidden');
-                stopSlideshow();
-            }
-        });
-
-        prevSlide.addEventListener('click', prevImage);
-        nextSlide.addEventListener('click', nextImage);
-
-        document.addEventListener('keydown', (e) => {
-            if (lightbox.classList.contains('hidden')) return;
-            if (e.key === 'ArrowLeft') prevImage();
-            if (e.key === 'ArrowRight') nextImage();
-            if (e.key === 'Escape') {
-                lightbox.classList.add('hidden');
-                stopSlideshow();
-            }
-        });
     </script>
 </body>
 </html>
