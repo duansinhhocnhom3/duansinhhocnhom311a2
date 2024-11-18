@@ -5,35 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hành Trình Trồng Cây - Theo Dõi Sự Phát Triển Qua Thời Gian</title>
     <meta name="description" content="Khám phá hành trình trồng cây của chúng tôi thông qua bộ sưu tập ảnh theo thời gian. Theo dõi sự phát triển và tăng trưởng của cây từng ngày.">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#10B981',
-                        secondary: '#059669',
-                    }
-                }
-            }
-        }
-    </script>
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"></noscript>
     <style>
         .lazy-image {
             transition: filter 0.3s;
+            filter: blur(20px);
         }
         .lazy-image.loaded {
-            filter: none;
-        }
-        .lazy-image:not(.loaded) {
-            filter: blur(10px);
+            filter: blur(0);
         }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
         .fade-in {
-            animation: fadeIn 0.5s ease-out forwards;
+            animation: fadeIn 0.3s ease-out forwards;
         }
         .scrollbar-hide::-webkit-scrollbar {
             display: none;
@@ -45,10 +32,10 @@
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
-    <header class="bg-primary text-white py-4 px-4 sm:px-6 lg:px-8 sticky top-0 z-10 shadow-md">
+    <header class="bg-green-600 text-white py-4 px-4 sm:px-6 lg:px-8 sticky top-0 z-10 shadow-md">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <h1 class="text-2xl sm:text-3xl font-bold">Hành Trình Trồng Cây Ớt của nhóm 3</h1>
-            <button id="scrollToTop" class="bg-white text-primary p-2 rounded-full shadow-lg transition-all duration-300 ease-in-out transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary hidden">
+            <button id="scrollToTop" class="bg-white text-green-600 p-2 rounded-full shadow-lg transition-all duration-300 ease-in-out transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 hidden">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
                 </svg>
@@ -106,18 +93,18 @@
         function createTimelineItem(date) {
             const button = document.createElement('button');
             button.textContent = formatDate(date);
-            button.className = 'flex-shrink-0 px-4 py-2 m-1 rounded-full text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary bg-white text-primary hover:bg-primary hover:text-white transition duration-300 ease-in-out transform hover:scale-105 snap-start';
-            button.addEventListener('click', () => showImages(date));
+            button.className = 'flex-shrink-0 px-4 py-2 m-1 rounded-full text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 bg-white text-green-600 hover:bg-green-600 hover:text-white transition duration-300 ease-in-out transform hover:scale-105 snap-start';
+            button.addEventListener('click', () => requestAnimationFrame(() => showImages(date)));
             return button;
         }
 
         function createImageElement(date, imageName, index) {
             const item = document.createElement('div');
             item.className = 'relative aspect-w-1 aspect-h-1 rounded-lg overflow-hidden shadow-lg transition-transform duration-300 ease-in-out hover:scale-105 fade-in';
-            item.style.animationDelay = `${index * 50}ms`;
+            item.style.animationDelay = `${index * 30}ms`;
             
             const img = new Image();
-            img.src = `data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7`; // Tiny transparent GIF
+            img.src = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E`;
             img.dataset.src = `${repoName}/images/${date}/${imageName}`;
             img.alt = `Hình ảnh cây ngày ${formatDate(date)}`;
             img.className = 'w-full h-full object-cover lazy-image';
@@ -126,16 +113,22 @@
             return item;
         }
 
+        let currentObserver = null;
+
         function showImages(date) {
+            if (currentObserver) {
+                currentObserver.disconnect();
+            }
+
             timeline.querySelectorAll('button').forEach(btn => {
                 if (btn.textContent === formatDate(date)) {
-                    btn.classList.add('bg-primary', 'text-white');
+                    btn.classList.add('bg-green-600', 'text-white');
                 } else {
-                    btn.classList.remove('bg-primary', 'text-white');
+                    btn.classList.remove('bg-green-600', 'text-white');
                 }
             });
 
-            gallery.innerHTML = '<div class="col-span-full flex justify-center items-center"><div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div></div>';
+            gallery.innerHTML = '<div class="col-span-full flex justify-center items-center"><div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div></div>';
 
             const images = imageData[date] || [];
             
@@ -153,9 +146,8 @@
             gallery.innerHTML = '';
             gallery.appendChild(fragment);
 
-            // Use Intersection Observer to lazy load images
             const lazyImages = document.querySelectorAll('.lazy-image');
-            const lazyImageObserver = new IntersectionObserver((entries, observer) => {
+            currentObserver = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         const lazyImage = entry.target;
@@ -164,11 +156,16 @@
                         observer.unobserve(lazyImage);
                     }
                 });
+            }, {
+                rootMargin: '200px',
+                threshold: 0.1
             });
 
             lazyImages.forEach(lazyImage => {
-                lazyImageObserver.observe(lazyImage);
+                currentObserver.observe(lazyImage);
             });
+
+            preloadNextDateImages(date);
         }
 
         dates.forEach(date => {
@@ -176,36 +173,42 @@
             timeline.appendChild(item);
         });
 
-        // Show first date's images by default
         showImages(dates[0]);
 
         scrollToTopBtn.addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
+        let lastScrollTop = 0;
         window.addEventListener('scroll', () => {
-            if (window.pageYOffset > 100) {
+            const st = window.pageYOffset || document.documentElement.scrollTop;
+            if (st > lastScrollTop && st > 100) {
                 scrollToTopBtn.classList.remove('hidden');
-            } else {
+            } else if (st < lastScrollTop || st <= 100) {
                 scrollToTopBtn.classList.add('hidden');
             }
-        });
+            lastScrollTop = st <= 0 ? 0 : st;
+        }, { passive: true });
 
-        // Preload images for the next date
         function preloadNextDateImages(currentDate) {
             const currentIndex = dates.indexOf(currentDate);
             if (currentIndex < dates.length - 1) {
                 const nextDate = dates[currentIndex + 1];
                 const nextImages = imageData[nextDate] || [];
-                nextImages.forEach(imageName => {
+                nextImages.slice(0, 4).forEach(imageName => {
                     const img = new Image();
                     img.src = `${repoName}/images/${nextDate}/${imageName}`;
                 });
             }
         }
 
-        // Start preloading after initial load
-        window.addEventListener('load', () => preloadNextDateImages(dates[0]));
+        window.addEventListener('load', () => {
+            if ('connection' in navigator && navigator.connection.saveData) {
+                console.log('Data saver is enabled. Disabling preloading.');
+                return;
+            }
+            preloadNextDateImages(dates[0]);
+        });
     </script>
 </body>
 </html>
