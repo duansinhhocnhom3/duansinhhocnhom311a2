@@ -19,6 +19,15 @@
         }
     </script>
     <style>
+        .lazy-image {
+            transition: filter 0.3s;
+        }
+        .lazy-image.loaded {
+            filter: none;
+        }
+        .lazy-image:not(.loaded) {
+            filter: blur(10px);
+        }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -71,7 +80,7 @@
             '1910': ['z6045398061389_2b8707827e24673f1b1cd166c7fddb92.jpg', 'z6045398343442_51999a322245bd1bbe12c15952921ce3.jpg', 'z6045398346365_900b7522f96826ecf644d6c537541d28.jpg', 'z6045398357979_16acafbcaac56f5b194c51c502ec0455.jpg', 'z6045398357983_71056e038fd99de97227790f01d656b9.jpg'],
             '2310': ['z6045399748567_78a7b3fbc6f1541004f198474571fc99.jpg', 'z6045399851209_ac0efcf02cbe41d01c0656952764eae3.jpg', 'z6045399855902_2b3b2f55291e22fa17947eb460000ede.jpg'],
             '2410': ['z6045403234518_bef00eaaa27e781ed69971498fdff42e.jpg', 'z6045403243962_b7f51687ccdbe1b22bb9cba78ab0f40a.jpg', 'z6045403306690_a754bb3b6c94a8adde11100c5c468340.jpg', 'z6045403309663_def3134bfe1689b4603a518a22315608.jpg', 'z6045403314294_07409195a9879d24d7cad5097b580eb3.jpg'],
-            '2810': ['z6045406548093_140b5aeac13f33843751d5334865a5ea.jpg', 'z6045406550624_ad0237236f27b2bbb3f715a04b68ba40.jpg', 'z6045406555298_decd79442122be95a3f69e2816a8074a.jpg', 'z6045406557196_1af5bc409baea04006e566fd308c7723.jpg', 'z6045406562320_5ad623b0f3d1a4002725aafe00872247.jpg', 'z6045406651121_e5df9cad5f1754ed1b8a7baa1df7955b.jpg', 'z6045406652662_273ecb632aa0728258259b4b1900ae09.jpg', 'z6045406655229_c82a604b0054b9571b65ae20717f4af3.jpg'],
+            '2810': ['z6045406548093_140b5aeac13f33843751d5334865a5ea.jpg', 'z6045406550624_ad0237236f27b2bbb3f715a04b68ba40.jpg', 'z6045406555298_decd79442122be95a3f715a04b68ba40.jpg', 'z6045406557196_1af5bc409baea04006e566fd308c7723.jpg', 'z6045406562320_5ad623b0f3d1a4002725aafe00872247.jpg', 'z6045406651121_e5df9cad5f1754ed1b8a7baa1df7955b.jpg', 'z6045406652662_273ecb632aa0728258259b4b1900ae09.jpg', 'z6045406655229_c82a604b0054b9571b65ae20717f4af3.jpg'],
             '511': ['z6045409049218_394d415a315882d3e1750494272da85e.jpg', 'z6045409051826_b9304c4c4a87c96ffcc5fca2e00c9ecd.jpg', 'z6045409055385_24e135f1a4cdf98a1d107e9f872ea958.jpg', 'z6045409057595_c3920eb35bb3baf2261bb8148577bbb8.jpg', 'z6045409062723_2ddab87e7d11b7ccc100f29df0f5f8fb.jpg', 'z6045409064492_679c38508a73f09fa6bb114ea587695f.jpg', 'z6045409068692_9961753e374527fea8ea64b0b15e4026.jpg', 'z6045409070278_17b1c39bd0b521ce4d535d03e0131e4a.jpg', 'z6045409074652_9b8b114c2929dac3419fe5d6ff85c2cd.jpg', 'z6045409141449_cf4156fc60cfee6a8fac84cc3d014283.jpg', 'z6045409149347_9296668960f5e86b1c9816d45d06e04a.jpg'],
             '1211': ['z6045411623212_0269bca09f55bd31a21b7d4a1d99a6b6.jpg', 'z6045411626766_c30c7d8ac73ef6be3ce2ff4f0f03df50.jpg', 'z6045411639726_8e8c49dffdb5f8453f33cbac168280f1.jpg', 'z6045411639728_adf717f32442baef0c90729adeb2447b.jpg', 'z6045411677204_9555a678cbfb18d3350a5bfae0c3b963.jpg', 'z6045411677360_2b13dc4fffb17e0fdf4c5f1743255c14.jpg'],
             '1711': ['z6045412765862_c8d18e27817264f5b38064fbf8488e8d.jpg', 'z6045412768295_668cbb83ed48decefe8a9a57380e3b87.jpg', 'z6045412919763_355bc0d4c6157be6e7dd13a8d5b291cd.jpg', 'z6045412921555_71250421459ba74146280c205dea4a42.jpg']
@@ -102,6 +111,21 @@
             return button;
         }
 
+        function createImageElement(date, imageName, index) {
+            const item = document.createElement('div');
+            item.className = 'relative aspect-w-1 aspect-h-1 rounded-lg overflow-hidden shadow-lg transition-transform duration-300 ease-in-out hover:scale-105 fade-in';
+            item.style.animationDelay = `${index * 50}ms`;
+            
+            const img = new Image();
+            img.src = `data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7`; // Tiny transparent GIF
+            img.dataset.src = `${repoName}/images/${date}/${imageName}`;
+            img.alt = `Hình ảnh cây ngày ${formatDate(date)}`;
+            img.className = 'w-full h-full object-cover lazy-image';
+            
+            item.appendChild(img);
+            return item;
+        }
+
         function showImages(date) {
             timeline.querySelectorAll('button').forEach(btn => {
                 if (btn.textContent === formatDate(date)) {
@@ -122,21 +146,29 @@
 
             const fragment = document.createDocumentFragment();
             images.forEach((imageName, index) => {
-                const item = document.createElement('div');
-                item.className = 'relative aspect-w-1 aspect-h-1 rounded-lg overflow-hidden shadow-lg transition-transform duration-300 ease-in-out hover:scale-105 fade-in';
-                item.style.animationDelay = `${index * 100}ms`;
-                
-                const img = new Image();
-                img.src = `${repoName}/images/${date}/${imageName}`;
-                img.alt = `Hình ảnh cây ngày ${formatDate(date)}`;
-                img.className = 'w-full h-full object-cover';
-                
-                item.appendChild(img);
+                const item = createImageElement(date, imageName, index);
                 fragment.appendChild(item);
             });
 
             gallery.innerHTML = '';
             gallery.appendChild(fragment);
+
+            // Use Intersection Observer to lazy load images
+            const lazyImages = document.querySelectorAll('.lazy-image');
+            const lazyImageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const lazyImage = entry.target;
+                        lazyImage.src = lazyImage.dataset.src;
+                        lazyImage.classList.add('loaded');
+                        observer.unobserve(lazyImage);
+                    }
+                });
+            });
+
+            lazyImages.forEach(lazyImage => {
+                lazyImageObserver.observe(lazyImage);
+            });
         }
 
         dates.forEach(date => {
@@ -159,18 +191,21 @@
             }
         });
 
-        // Preload all images
-        function preloadAllImages() {
-            Object.entries(imageData).forEach(([date, images]) => {
-                images.forEach(imageName => {
+        // Preload images for the next date
+        function preloadNextDateImages(currentDate) {
+            const currentIndex = dates.indexOf(currentDate);
+            if (currentIndex < dates.length - 1) {
+                const nextDate = dates[currentIndex + 1];
+                const nextImages = imageData[nextDate] || [];
+                nextImages.forEach(imageName => {
                     const img = new Image();
-                    img.src = `${repoName}/images/${date}/${imageName}`;
+                    img.src = `${repoName}/images/${nextDate}/${imageName}`;
                 });
-            });
+            }
         }
 
         // Start preloading after initial load
-        window.addEventListener('load', preloadAllImages);
+        window.addEventListener('load', () => preloadNextDateImages(dates[0]));
     </script>
 </body>
 </html>
