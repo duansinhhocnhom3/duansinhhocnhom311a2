@@ -6,25 +6,30 @@
     <title>Hành Trình Trồng Cây - Theo Dõi Sự Phát Triển Qua Thời Gian</title>
     <meta name="description" content="Khám phá hành trình trồng cây của chúng tôi thông qua bộ sưu tập ảnh theo thời gian. Theo dõi sự phát triển và tăng trưởng của cây từng ngày.">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        primary: '#10B981',
-                        secondary: '#059669',
-                    }
+                        primary: '#2ECC71',
+                        secondary: '#27AE60',
+                        accent: '#F39C12',
+                    },
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                    },
                 }
             }
         }
     </script>
     <style>
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .fade-in {
-            animation: fadeIn 0.3s ease-out forwards;
+        .fade-in-up {
+            animation: fadeInUp 0.5s ease-out forwards;
         }
         .scrollbar-hide::-webkit-scrollbar {
             display: none;
@@ -33,32 +38,91 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+        .parallax {
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
-    <header class="bg-primary text-white py-6 px-4 sm:px-6 lg:px-8 sticky top-0 z-10 shadow-lg">
+<body class="bg-gray-50 text-gray-800 font-sans">
+    <header class="bg-primary text-white py-6 px-4 sm:px-6 lg:px-8 sticky top-0 z-50 shadow-lg transition-all duration-300 ease-in-out">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <h1 class="text-3xl sm:text-4xl font-bold tracking-tight">Hành Trình Trồng Cây Ớt của nhóm 3</h1>
-            <button id="scrollToTop" class="bg-white text-primary p-3 rounded-full shadow-lg transition-all duration-300 ease-in-out transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary hidden">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+            <h1 class="text-3xl sm:text-4xl font-bold tracking-tight">Hành Trình Trồng Cây Ớt</h1>
+            <nav class="hidden md:flex space-x-4">
+                <a href="#timeline" class="text-white hover:text-accent transition duration-300">Timeline</a>
+                <a href="#gallery" class="text-white hover:text-accent transition duration-300">Thư viện ảnh</a>
+                <a href="#about" class="text-white hover:text-accent transition duration-300">Về chúng tôi</a>
+            </nav>
+            <button id="mobileMenuBtn" class="md:hidden text-white focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
                 </svg>
             </button>
         </div>
     </header>
 
+    <div id="mobileMenu" class="hidden md:hidden bg-primary text-white py-4 px-4 sm:px-6 lg:px-8">
+        <a href="#timeline" class="block py-2 hover:text-accent transition duration-300">Timeline</a>
+        <a href="#gallery" class="block py-2 hover:text-accent transition duration-300">Thư viện ảnh</a>
+        <a href="#about" class="block py-2 hover:text-accent transition duration-300">Về chúng tôi</a>
+    </div>
+
     <main class="flex-grow container mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        <div id="timeline" class="flex overflow-x-auto pb-6 mb-8 scrollbar-hide snap-x snap-mandatory">
-            <!-- Timeline items will be added here -->
-        </div>
-        <div id="gallery" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <!-- Gallery items will be added here -->
-        </div>
+        <section id="hero" class="text-center py-20 bg-gradient-to-r from-primary to-secondary text-white rounded-lg shadow-2xl mb-12">
+            <h2 class="text-4xl sm:text-5xl font-bold mb-4">Khám Phá Hành Trình Trồng Cây</h2>
+            <p class="text-xl mb-8">Theo dõi sự phát triển kỳ diệu của cây ớt qua từng ngày</p>
+            <a href="#timeline" class="bg-accent text-white font-bold py-3 px-6 rounded-full hover:bg-yellow-500 transition duration-300 inline-block">Bắt đầu hành trình</a>
+        </section>
+
+        <section id="timeline" class="mb-16">
+            <h3 class="text-3xl font-bold mb-6 text-center">Timeline</h3>
+            <div class="flex overflow-x-auto pb-6 scrollbar-hide snap-x snap-mandatory">
+                <!-- Timeline items will be added here -->
+            </div>
+        </section>
+
+        <section id="gallery" class="mb-16">
+            <h3 class="text-3xl font-bold mb-6 text-center">Thư Viện Ảnh</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Gallery items will be added here -->
+            </div>
+        </section>
+
+        <section id="about" class="py-20 bg-gray-100 rounded-lg shadow-inner">
+            <div class="max-w-4xl mx-auto text-center">
+                <h3 class="text-3xl font-bold mb-6">Về Chúng Tôi</h3>
+                <p class="text-lg mb-8">Chúng tôi là nhóm 3, những người đam mê khoa học và yêu thích việc trồng cây. Dự án này là kết quả của sự tận tâm và kiên nhẫn trong việc theo dõi quá trình phát triển của cây ớt.</p>
+                <a href="#" class="bg-primary text-white font-bold py-3 px-6 rounded-full hover:bg-secondary transition duration-300 inline-block">Tìm hiểu thêm</a>
+            </div>
+        </section>
     </main>
 
-    <footer class="bg-gray-100 text-gray-600 py-4 text-center">
-        <p>&copy; 2023 Nhóm 3. Tất cả quyền được bảo lưu.</p>
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-wrap justify-between items-center">
+                <div class="w-full md:w-1/3 text-center md:text-left mb-4 md:mb-0">
+                    <h4 class="text-2xl font-bold">Nhóm 3</h4>
+                    <p>Hành trình trồng cây ớt</p>
+                </div>
+                <div class="w-full md:w-1/3 text-center mb-4 md:mb-0">
+                    <a href="#" class="text-accent hover:text-white transition duration-300 mx-2">Facebook</a>
+                    <a href="#" class="text-accent hover:text-white transition duration-300 mx-2">Instagram</a>
+                    <a href="#" class="text-accent hover:text-white transition duration-300 mx-2">Twitter</a>
+                </div>
+                <div class="w-full md:w-1/3 text-center md:text-right">
+                    <p>&copy; 2023 Nhóm 3. Tất cả quyền được bảo lưu.</p>
+                </div>
+            </div>
+        </div>
     </footer>
+
+    <button id="scrollToTop" class="fixed bottom-8 right-8 bg-primary text-white p-3 rounded-full shadow-lg transition-all duration-300 ease-in-out transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+        </svg>
+    </button>
 
     <script>
         // GitHub Pages repository name - IMPORTANT: Update this to match your repository name
@@ -91,6 +155,8 @@
         const timeline = document.getElementById('timeline');
         const gallery = document.getElementById('gallery');
         const scrollToTopBtn = document.getElementById('scrollToTop');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
 
         function formatDate(dateString) {
             const day = dateString.slice(0, -2);
@@ -108,15 +174,25 @@
 
         function createImageElement(date, imageName, index) {
             const item = document.createElement('div');
-            item.className = 'relative aspect-w-1 aspect-h-1 rounded-lg overflow-hidden shadow-xl transition-transform duration-300 ease-in-out hover:scale-105 fade-in';
-            item.style.animationDelay = `${index * 50}ms`;
+            item.className = 'relative aspect-w-1 aspect-h-1 rounded-lg overflow-hidden shadow-xl transition-transform duration-300 ease-in-out hover:scale-105 fade-in-up';
+            item.style.animationDelay = `${index * 100}ms`;
             
             const img = new Image();
             img.src = `${repoName}/images/${date}/${imageName}`;
             img.alt = `Hình ảnh cây ngày ${formatDate(date)}`;
             img.className = 'w-full h-full object-cover transition-all duration-300 transform hover:scale-110';
             
+            const overlay = document.createElement('div');
+            overlay.className = 'absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300';
+            
+            const date_text = document.createElement('p');
+            date_text.textContent = formatDate(date);
+            date_text.className = 'text-white text-lg font-bold';
+            
+            overlay.appendChild(date_text);
             item.appendChild(img);
+            item.appendChild(overlay);
+            
             return item;
         }
 
@@ -168,6 +244,37 @@
                 scrollToTopBtn.classList.add('hidden');
             }
             lastScrollTop = st <= 0 ? 0 : st;
+        }, { passive: true });
+
+        // Mobile menu toggle
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!mobileMenuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+                mobileMenu.classList.add('hidden');
+            }
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+                // Close mobile menu after clicking a link
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Add parallax effect to hero section
+        window.addEventListener('scroll', () => {
+            const heroSection = document.getElementById('hero');
+            const scrollPosition = window.pageYOffset;
+            heroSection.style.backgroundPositionY = `${scrollPosition * 0.5}px`;
         }, { passive: true });
 
         // Add touch events for mobile swipe navigation
