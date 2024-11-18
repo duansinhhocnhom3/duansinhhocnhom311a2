@@ -5,16 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hành Trình Trồng Cây - Theo Dõi Sự Phát Triển Qua Thời Gian</title>
     <meta name="description" content="Khám phá hành trình trồng cây của chúng tôi thông qua bộ sưu tập ảnh theo thời gian. Theo dõi sự phát triển và tăng trưởng của cây từng ngày.">
-    <link rel="preload" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"></noscript>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#10B981',
+                        secondary: '#059669',
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        .lazy-image {
-            transition: opacity 0.3s;
-            opacity: 0;
-        }
-        .lazy-image.loaded {
-            opacity: 1;
-        }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -32,10 +36,10 @@
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
-    <header class="bg-green-600 text-white py-4 px-4 sm:px-6 lg:px-8 sticky top-0 z-10 shadow-md">
+    <header class="bg-primary text-white py-6 px-4 sm:px-6 lg:px-8 sticky top-0 z-10 shadow-lg">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <h1 class="text-2xl sm:text-3xl font-bold">Hành Trình Trồng Cây Ớt của nhóm 3</h1>
-            <button id="scrollToTop" class="bg-white text-green-600 p-2 rounded-full shadow-lg transition-all duration-300 ease-in-out transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 hidden">
+            <h1 class="text-3xl sm:text-4xl font-bold tracking-tight">Hành Trình Trồng Cây Ớt của nhóm 3</h1>
+            <button id="scrollToTop" class="bg-white text-primary p-3 rounded-full shadow-lg transition-all duration-300 ease-in-out transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary hidden">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
                 </svg>
@@ -43,14 +47,18 @@
         </div>
     </header>
 
-    <main class="flex-grow container mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        <div id="timeline" class="flex overflow-x-auto pb-4 mb-6 scrollbar-hide snap-x snap-mandatory">
+    <main class="flex-grow container mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <div id="timeline" class="flex overflow-x-auto pb-6 mb-8 scrollbar-hide snap-x snap-mandatory">
             <!-- Timeline items will be added here -->
         </div>
-        <div id="gallery" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div id="gallery" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             <!-- Gallery items will be added here -->
         </div>
     </main>
+
+    <footer class="bg-gray-100 text-gray-600 py-4 text-center">
+        <p>&copy; 2023 Nhóm 3. Tất cả quyền được bảo lưu.</p>
+    </footer>
 
     <script>
         // GitHub Pages repository name - IMPORTANT: Update this to match your repository name
@@ -93,47 +101,40 @@
         function createTimelineItem(date) {
             const button = document.createElement('button');
             button.textContent = formatDate(date);
-            button.className = 'flex-shrink-0 px-4 py-2 m-1 rounded-full text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 bg-white text-green-600 hover:bg-green-600 hover:text-white transition duration-300 ease-in-out transform hover:scale-105 snap-start';
+            button.className = 'flex-shrink-0 px-6 py-3 m-1 rounded-full text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary bg-white text-primary hover:bg-primary hover:text-white transition duration-300 ease-in-out transform hover:scale-105 snap-start shadow-md';
             button.addEventListener('click', () => requestAnimationFrame(() => showImages(date)));
             return button;
         }
 
         function createImageElement(date, imageName, index) {
             const item = document.createElement('div');
-            item.className = 'relative aspect-w-1 aspect-h-1 rounded-lg overflow-hidden shadow-lg transition-transform duration-300 ease-in-out hover:scale-105 fade-in';
-            item.style.animationDelay = `${index * 30}ms`;
+            item.className = 'relative aspect-w-1 aspect-h-1 rounded-lg overflow-hidden shadow-xl transition-transform duration-300 ease-in-out hover:scale-105 fade-in';
+            item.style.animationDelay = `${index * 50}ms`;
             
             const img = new Image();
-            img.src = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E`;
-            img.dataset.src = `${repoName}/images/${date}/${imageName}`;
+            img.src = `${repoName}/images/${date}/${imageName}`;
             img.alt = `Hình ảnh cây ngày ${formatDate(date)}`;
-            img.className = 'w-full h-full object-cover lazy-image';
+            img.className = 'w-full h-full object-cover transition-all duration-300 transform hover:scale-110';
             
             item.appendChild(img);
             return item;
         }
 
-        let currentObserver = null;
-
         function showImages(date) {
-            if (currentObserver) {
-                currentObserver.disconnect();
-            }
-
             timeline.querySelectorAll('button').forEach(btn => {
                 if (btn.textContent === formatDate(date)) {
-                    btn.classList.add('bg-green-600', 'text-white');
+                    btn.classList.add('bg-primary', 'text-white');
                 } else {
-                    btn.classList.remove('bg-green-600', 'text-white');
+                    btn.classList.remove('bg-primary', 'text-white');
                 }
             });
 
-            gallery.innerHTML = '<div class="col-span-full flex justify-center items-center"><div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div></div>';
+            gallery.innerHTML = '<div class="col-span-full flex justify-center items-center"><div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div></div>';
 
             const images = imageData[date] || [];
             
             if (images.length === 0) {
-                gallery.innerHTML = '<p class="col-span-full text-center text-gray-500">Không có ảnh cho ngày này.</p>';
+                gallery.innerHTML = '<p class="col-span-full text-center text-gray-500 text-lg">Không có ảnh cho ngày này.</p>';
                 return;
             }
 
@@ -145,27 +146,6 @@
 
             gallery.innerHTML = '';
             gallery.appendChild(fragment);
-
-            const lazyImages = document.querySelectorAll('.lazy-image');
-            currentObserver = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const lazyImage = entry.target;
-                        lazyImage.src = lazyImage.dataset.src;
-                        lazyImage.classList.add('loaded');
-                        observer.unobserve(lazyImage);
-                    }
-                });
-            }, {
-                rootMargin: '200px',
-                threshold: 0.1
-            });
-
-            lazyImages.forEach(lazyImage => {
-                currentObserver.observe(lazyImage);
-            });
-
-            preloadNextDateImages(date);
         }
 
         dates.forEach(date => {
@@ -190,152 +170,21 @@
             lastScrollTop = st <= 0 ? 0 : st;
         }, { passive: true });
 
-        function preloadNextDateImages(currentDate) {
-            const currentIndex = dates.indexOf(currentDate);
-            if (currentIndex < dates.length - 1) {
-                const nextDate = dates[currentIndex + 1];
-                const nextImages = imageData[nextDate] || [];
-                nextImages.slice(0, 4).forEach(imageName => {
-                    const img = new Image();
-                    img.src = `${repoName}/images/${nextDate}/${imageName}`;
-                });
-            }
-        }
-
-        window.addEventListener('load', () => {
-            if ('connection' in navigator && navigator.connection.saveData) {
-                console.log('Data saver is enabled. Disabling preloading.');
-                return;
-            }
-            preloadNextDateImages(dates[0]);
-        });
-
-        // Implement progressive image loading
-        function loadProgressiveImage(img) {
-            const lowQualitySrc = img.dataset.src.replace('.jpg', '-low.jpg');
-            const highQualitySrc = img.dataset.src;
-
-            // Load low quality image
-            img.src = lowQualitySrc;
-            img.classList.add('blur-sm');
-
-            // Load high quality image
-            const highQualityImg = new Image();
-            highQualityImg.src = highQualitySrc;
-            highQualityImg.onload = () => {
-                img.src = highQualitySrc;
-                img.classList.remove('blur-sm');
-                img.classList.add('loaded');
-            };
-        }
-
-        // Update the createImageElement function
-        function createImageElement(date, imageName, index) {
-            const item = document.createElement('div');
-            item.className = 'relative aspect-w-1 aspect-h-1 rounded-lg overflow-hidden shadow-lg transition-transform duration-300 ease-in-out hover:scale-105 fade-in';
-            item.style.animationDelay = `${index * 30}ms`;
-            
-            const img = new Image();
-            img.dataset.src = `${repoName}/images/${date}/${imageName}`;
-            img.alt = `Hình ảnh cây ngày ${formatDate(date)}`;
-            img.className = 'w-full h-full object-cover lazy-image transition-all duration-300';
-            
-            item.appendChild(img);
-            return item;
-        }
-
-        // Update the IntersectionObserver callback
-        currentObserver = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const lazyImage = entry.target;
-                    loadProgressiveImage(lazyImage);
-                    observer.unobserve(lazyImage);
-                }
-            });
-        }, {
-            rootMargin: '200px',
-            threshold: 0.1
-        });
-
-        // Implement image compression on the server-side (instructions for server)
-        // 1. Use a tool like ImageMagick to create low-quality versions of images
-        // 2. For each image, create a low-quality version with the suffix "-low.jpg"
-        // 3. Optimize all images using a tool like mozjpeg or WebP for modern browsers
-
-        // Add support for WebP images
-        function supportsWebP() {
-            const elem = document.createElement('canvas');
-            if (!!(elem.getContext && elem.getContext('2d'))) {
-                return elem.toDataURL('image/webp').indexOf('data:image/webp') === 0;
-            }
-            return false;
-        }
-
-        if (supportsWebP()) {
-            // Update image URLs to use WebP format
-            Object.keys(imageData).forEach(date => {
-                imageData[date] = imageData[date].map(img => img.replace('.jpg', '.webp'));
-            });
-        }
-
-        // Implement image lazy loading with IntersectionObserver
-        const lazyLoadImages = () => {
-            const imageObserver = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const lazyImage = entry.target;
-                        lazyImage.src = lazyImage.dataset.src;
-                        lazyImage.classList.remove("lazy-image");
-                        imageObserver.unobserve(lazyImage);
-                    }
-                });
-            });
-
-            const lazyImages = document.querySelectorAll(".lazy-image");
-            lazyImages.forEach(img => imageObserver.observe(img));
-        };
-
-        // Call lazyLoadImages after the images are added to the DOM
-        const originalShowImages = showImages;
-        showImages = (date) => {
-            originalShowImages(date);
-            lazyLoadImages();
-        };
-
-        // Preload images for smoother navigation
-        const preloadImages = (images) => {
-            images.forEach(img => {
-                const image = new Image();
-                image.src = img;
-            });
-        };
-
-        // Update preloadNextDateImages function
-        function preloadNextDateImages(currentDate) {
-            const currentIndex = dates.indexOf(currentDate);
-            if (currentIndex < dates.length - 1) {
-                const nextDate = dates[currentIndex + 1];
-                const nextImages = imageData[nextDate] || [];
-                preloadImages(nextImages.slice(0, 4).map(img => `${repoName}/images/${nextDate}/${img}`));
-            }
-        }
-
         // Add touch events for mobile swipe navigation
         let touchStartX = 0;
         let touchEndX = 0;
 
         gallery.addEventListener('touchstart', e => {
             touchStartX = e.changedTouches[0].screenX;
-        }, false);
+        }, { passive: true });
 
         gallery.addEventListener('touchend', e => {
             touchEndX = e.changedTouches[0].screenX;
             handleSwipe();
-        }, false);
+        }, { passive: true });
 
         function handleSwipe() {
-            const currentDate = dates[dates.findIndex(date => document.querySelector(`button.bg-green-600`).textContent === formatDate(date))];
+            const currentDate = dates[dates.findIndex(date => document.querySelector(`button.bg-primary`).textContent === formatDate(date))];
             const currentIndex = dates.indexOf(currentDate);
 
             if (touchEndX < touchStartX && currentIndex < dates.length - 1) {
