@@ -5,42 +5,162 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hành Trình Trồng Cây - Theo Dõi Sự Phát Triển Qua Thời Gian</title>
     <meta name="description" content="Khám phá hành trình trồng cây của chúng tôi thông qua bộ sưu tập ảnh theo thời gian. Theo dõi sự phát triển và tăng trưởng của cây từng ngày.">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
     <style>
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
+        :root {
+            --color-primary: #10B981;
+            --color-primary-dark: #059669;
+            --color-background: #F9FAFB;
+            --color-text: #1F2937;
+            --color-text-light: #6B7280;
+            --color-white: #FFFFFF;
         }
-        .fade-in {
-            animation: fadeIn 0.3s ease-out forwards;
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--color-background);
+            color: var(--color-text);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
-        .scrollbar-hide::-webkit-scrollbar {
-            display: none;
+        header {
+            background-color: var(--color-primary);
+            color: var(--color-white);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .scrollbar-hide {
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        h1 {
+            font-size: 1.5rem;
+            margin: 0;
+        }
+        main {
+            flex-grow: 1;
+            padding: 2rem 0;
+        }
+        #timeline {
+            display: flex;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+            scroll-snap-type: x mandatory;
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+        #timeline::-webkit-scrollbar {
+            display: none;
+        }
+        .timeline-item {
+            flex-shrink: 0;
+            padding: 0.5rem 1rem;
+            margin: 0 0.25rem;
+            background-color: var(--color-white);
+            color: var(--color-primary);
+            border: 1px solid var(--color-primary);
+            border-radius: 9999px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            scroll-snap-align: start;
+        }
+        .timeline-item:hover, .timeline-item.active {
+            background-color: var(--color-primary);
+            color: var(--color-white);
+        }
+        #gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        .gallery-item {
+            position: relative;
+            aspect-ratio: 1;
+            overflow: hidden;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .gallery-item:hover {
+            transform: scale(1.05);
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.3s ease;
+        }
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+        }
+        .spinner {
+            border: 4px solid rgba(0,0,0,0.1);
+            border-left-color: var(--color-primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        #scrollToTop {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--color-primary);
+            color: var(--color-white);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s ease;
+        }
+        #scrollToTop:hover {
+            background-color: var(--color-primary-dark);
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
-    <header class="bg-green-600 text-white py-4 px-4 sm:px-6 lg:px-8 sticky top-0 z-10 shadow-md">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <h1 class="text-2xl sm:text-3xl font-bold">Hành Trình Trồng Cây Ớt của nhóm 3</h1>
-            <button id="scrollToTop" class="bg-green-500 hover:bg-green-400 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-300 hidden">
-                ↑
-            </button>
+<body>
+    <header>
+        <div class="container">
+            <h1>Hành Trình Trồng Cây Ớt của nhóm 3</h1>
         </div>
     </header>
 
-    <main class="flex-grow container mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        <div id="timeline" class="flex overflow-x-auto pb-4 mb-6 scrollbar-hide snap-x snap-mandatory">
-            <!-- Timeline items will be added here -->
-        </div>
-        <div id="gallery" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            <!-- Gallery items will be added here -->
-        </div>
+    <main class="container">
+        <div id="timeline"></div>
+        <div id="gallery"></div>
     </main>
+
+    <button id="scrollToTop" aria-label="Cuộn lên đầu trang">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="18 15 12 9 6 15"></polyline>
+        </svg>
+    </button>
 
     <script>
         // GitHub Pages repository name - IMPORTANT: Update this to match your repository name
@@ -83,43 +203,40 @@
         function createTimelineItem(date) {
             const button = document.createElement('button');
             button.textContent = formatDate(date);
-            button.className = 'flex-shrink-0 px-4 py-2 m-1 rounded-full text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 bg-white text-green-600 hover:bg-green-50 transition duration-300 ease-in-out transform hover:scale-105 snap-start';
+            button.className = 'timeline-item';
             button.addEventListener('click', () => showImages(date));
             return button;
         }
 
         function showImages(date) {
-            timeline.querySelectorAll('button').forEach(btn => {
-                if (btn.textContent === formatDate(date)) {
-                    btn.classList.add('bg-green-600', 'text-white');
-                } else {
-                    btn.classList.remove('bg-green-600', 'text-white');
-                }
+            timeline.querySelectorAll('.timeline-item').forEach(btn => {
+                btn.classList.toggle('active', btn.textContent === formatDate(date));
             });
 
-            gallery.innerHTML = '<div class="col-span-full text-center"><div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-green-500"></div></div>';
+            gallery.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
 
             const images = imageData[date] || [];
             
             if (images.length === 0) {
-                gallery.innerHTML = '<p class="col-span-full text-center text-gray-500">Không có ảnh cho ngày này.</p>';
+                gallery.innerHTML = '<p class="text-center text-gray-500">Không có ảnh cho ngày này.</p>';
                 return;
             }
 
             const fragment = document.createDocumentFragment();
-            images.forEach((imageName) => {
+            images.forEach((imageName, index) => {
                 const item = document.createElement('div');
-                item.className = 'relative aspect-w-1 aspect-h-1 rounded-lg overflow-hidden shadow-lg transition-transform duration-300 ease-in-out hover:scale-105';
+                item.className = 'gallery-item';
                 
                 const img = new Image();
                 img.src = `${repoName}/images/${date}/${imageName}`;
                 img.alt = `Hình ảnh cây ngày ${formatDate(date)}`;
-                img.className = 'w-full h-full object-cover opacity-0';
                 img.loading = 'lazy';
+                img.style.opacity = '0';
                 
                 img.onload = () => {
-                    img.classList.remove('opacity-0');
-                    img.classList.add('fade-in');
+                    img.style.opacity = '1';
+                    item.classList.add('fade-in');
+                    item.style.animationDelay = `${index * 100}ms`;
                 };
                 
                 item.appendChild(img);
@@ -133,9 +250,12 @@
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    const img = entry.target;
-                    img.src = img.dataset.src;
-                    observer.unobserve(img);
+                    const img = entry.target.querySelector('img');
+                    if (img && img.dataset.src) {
+                        img.src = img.dataset.src;
+                        img.removeAttribute('data-src');
+                    }
+                    observer.unobserve(entry.target);
                 }
             });
         }, {
@@ -155,11 +275,7 @@
         });
 
         window.addEventListener('scroll', () => {
-            if (window.pageYOffset > 100) {
-                scrollToTopBtn.classList.remove('hidden');
-            } else {
-                scrollToTopBtn.classList.add('hidden');
-            }
+            scrollToTopBtn.style.display = window.pageYOffset > 100 ? 'flex' : 'none';
         });
 
         // Preload next set of images
@@ -178,6 +294,19 @@
 
         // Start preloading after initial load
         window.addEventListener('load', preloadNextImages);
+
+        // Optimize scroll performance
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    const scrollPosition = window.pageYOffset;
+                    scrollToTopBtn.style.display = scrollPosition > 100 ? 'flex' : 'none';
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
     </script>
 </body>
 </html>
