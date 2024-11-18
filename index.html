@@ -14,7 +14,6 @@
         .fade-in {
             animation: fadeIn 0.3s ease-out forwards;
         }
-        /* Add GitHub Pages specific styles */
         .scrollbar-hide::-webkit-scrollbar {
             display: none;
         }
@@ -44,13 +43,36 @@
     </main>
 
     <script>
-        const dates = ['3009', '110', '310', '710', '1010', '1510', '1710', '1910', '2310', '2410', '2810', '511', '1211', '1711'];
+        // GitHub Pages repository name - IMPORTANT: Update this to match your repository name
+        const repoName = '/duansinhhocnhom311a2';
+        
+        const imageData = {
+            '3009': ['z6045374383684_47d945c1cb61e82eb1a909dcc542a8a4.jpg', 'z6045374389864_91a049be727ca9e09b7ff76b58edaebb.jpg', 'z6045374452476_3d0cb3bb894da9677d883b654b447e8e.jpg', 'z6045374462411_7a0dfd534b20afbfbe63986437cafe6e.jpg'],
+            '110': ['z6045376550943_8a104375a2cbf8de5d2f89a73dbd2789.jpg', 'z6045376647523_7666eb48ba3b506bd56a72a6378aa4e2.jpg', 'z6045376666031_5b9aee716800f5a39fc4eae27042bca3.jpg'],
+            '310': ['z6045380034713_0a10242dfe78678c86c86cda8caf7f5f.jpg'],
+            '710': ['z6045383268750_186c709c7363450a942ba7021e4bc45f.jpg', 'z6045383273552_80cff11a6a4ec314f52c73b7af9512be.jpg', 'z6045383275417_26187764059f5fffa2305122d1b34a33.jpg', 'z6045383278641_294ac7a36570e17747d7cd818c3ad618.jpg', 'z6045383284402_8e619903d1035b62ea88b0fce7155b8d.jpg', 'z6045383287687_62b78f17456177435a97dfa46ef2927c.jpg', 'z6045383290840_439615b7cae809571398c7b2c4d05803.jpg', 'z6045383358093_5e91fb53fa82126493a1b3fe46f196f4.jpg', 'z6045383367559_fca5d0fc2e265a5d8a171c9c9b0726d3.jpg'],
+            '1010': ['z6045387917091_036e07e2c30358a527ab4d7d2d8b47c7.jpg'],
+            '1510': ['z6045391610060_94e816984611defef65a2bcf5ab96509.jpg', 'z6045391611233_d9a3d53f973f33a82d7de5ebe394e36a.jpg', 'z6045391613723_f7cd9f257dff61157980644b5c6fa006.jpg', 'z6045391617849_dd93871422a94b44439b6a8fcda6c8ba.jpg'],
+            '1710': ['z6045396715161_05ae065c0a12719a4d658e8c185fa596.jpg', 'z6045396716427_f4c570f64b0d32535dfc9f0bb121f154.jpg', 'z6045396721307_eadc423df43a411550a5b672cbea9512.jpg', 'z6045396726809_239977285a2d75f923b3f2cce0e40916.jpg', 'z6045396726824_0df5d155d6ccb250be9453c73571fd04.jpg', 'z6045396731411_f6d794419a3ac73892b4a626aefd9c60.jpg', 'z6045396735955_dec20d5c9b22078526cf37518ea213b6.jpg', 'z6045396737506_52b520718cd349e892afff5413ff8cfc.jpg', 'z6045396792939_ea1f988c8ca2222f9e9e9409645d4577.jpg', 'z6045396811101_896a5e0ccc6251bef39abb49b9d576a9.jpg'],
+            '1910': ['z6045398061389_2b8707827e24673f1b1cd166c7fddb92.jpg', 'z6045398343442_51999a322245bd1bbe12c15952921ce3.jpg', 'z6045398346365_900b7522f96826ecf644d6c537541d28.jpg', 'z6045398357979_16acafbcaac56f5b194c51c502ec0455.jpg', 'z6045398357983_71056e038fd99de97227790f01d656b9.jpg'],
+            '2310': ['z6045399748567_78a7b3fbc6f1541004f198474571fc99.jpg', 'z6045399851209_ac0efcf02cbe41d01c0656952764eae3.jpg', 'z6045399855902_2b3b2f55291e22fa17947eb460000ede.jpg'],
+            '2410': ['z6045403234518_bef00eaaa27e781ed69971498fdff42e.jpg', 'z6045403243962_b7f51687ccdbe1b22bb9cba78ab0f40a.jpg', 'z6045403306690_a754bb3b6c94a8adde11100c5c468340.jpg', 'z6045403309663_def3134bfe1689b4603a518a22315608.jpg', 'z6045403314294_07409195a9879d24d7cad5097b580eb3.jpg'],
+            '2810': ['z6045406548093_140b5aeac13f33843751d5334865a5ea.jpg', 'z6045406550624_ad0237236f27b2bbb3f715a04b68ba40.jpg', 'z6045406555298_decd79442122be95a3f69e2816a8074a.jpg', 'z6045406557196_1af5bc409baea04006e566fd308c7723.jpg', 'z6045406562320_5ad623b0f3d1a4002725aafe00872247.jpg', 'z6045406651121_e5df9cad5f1754ed1b8a7baa1df7955b.jpg', 'z6045406652662_273ecb632aa0728258259b4b1900ae09.jpg', 'z6045406655229_c82a604b0054b9571b65ae20717f4af3.jpg'],
+            '511': ['z6045409049218_394d415a315882d3e1750494272da85e.jpg', 'z6045409051826_b9304c4c4a87c96ffcc5fca2e00c9ecd.jpg', 'z6045409055385_24e135f1a4cdf98a1d107e9f872ea958.jpg', 'z6045409057595_c3920eb35bb3baf2261bb8148577bbb8.jpg', 'z6045409062723_2ddab87e7d11b7ccc100f29df0f5f8fb.jpg', 'z6045409064492_679c38508a73f09fa6bb114ea587695f.jpg', 'z6045409068692_9961753e374527fea8ea64b0b15e4026.jpg', 'z6045409070278_17b1c39bd0b521ce4d535d03e0131e4a.jpg', 'z6045409074652_9b8b114c2929dac3419fe5d6ff85c2cd.jpg', 'z6045409141449_cf4156fc60cfee6a8fac84cc3d014283.jpg', 'z6045409149347_9296668960f5e86b1c9816d45d06e04a.jpg'],
+            '1211': ['z6045411623212_0269bca09f55bd31a21b7d4a1d99a6b6.jpg', 'z6045411626766_c30c7d8ac73ef6be3ce2ff4f0f03df50.jpg', 'z6045411639726_8e8c49dffdb5f8453f33cbac168280f1.jpg', 'z6045411639728_adf717f32442baef0c90729adeb2447b.jpg', 'z6045411677204_9555a678cbfb18d3350a5bfae0c3b963.jpg', 'z6045411677360_2b13dc4fffb17e0fdf4c5f1743255c14.jpg'],
+            '1711': ['z6045412765862_c8d18e27817264f5b38064fbf8488e8d.jpg', 'z6045412768295_668cbb83ed48decefe8a9a57380e3b87.jpg', 'z6045412919763_355bc0d4c6157be6e7dd13a8d5b291cd.jpg', 'z6045412921555_71250421459ba74146280c205dea4a42.jpg']
+        };
+
+        const dates = Object.keys(imageData).sort((a, b) => {
+            const monthA = parseInt(a.slice(-2));
+            const monthB = parseInt(b.slice(-2));
+            if (monthA !== monthB) return monthA - monthB;
+            return parseInt(a.slice(0, -2)) - parseInt(b.slice(0, -2));
+        });
+
         const timeline = document.getElementById('timeline');
         const gallery = document.getElementById('gallery');
         const scrollToTopBtn = document.getElementById('scrollToTop');
-        
-        // GitHub Pages specific base path - adjust this to match your repository name
-        const basePath = '/your-repo-name'; // Replace 'your-repo-name' with your actual repository name
 
         function formatDate(dateString) {
             const day = dateString.slice(0, -2);
@@ -66,15 +88,20 @@
             return button;
         }
 
-        async function showImages(date) {
-            timeline.querySelectorAll('button').forEach(btn => btn.classList.remove('bg-green-600', 'text-white'));
-            event.target.classList.add('bg-green-600', 'text-white');
+        function showImages(date) {
+            timeline.querySelectorAll('button').forEach(btn => {
+                if (btn.textContent === formatDate(date)) {
+                    btn.classList.add('bg-green-600', 'text-white');
+                } else {
+                    btn.classList.remove('bg-green-600', 'text-white');
+                }
+            });
 
             gallery.innerHTML = '<div class="col-span-full text-center"><div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-green-500"></div></div>';
 
-            try {
-                // For GitHub Pages, we'll use a predefined list of images instead of directory listing
-                const images = await getImagesForDate(date);
+            const images = imageData[date] || [];
+            
+            setTimeout(() => {
                 gallery.innerHTML = '';
 
                 if (images.length === 0) {
@@ -87,8 +114,8 @@
                     item.className = 'relative aspect-w-1 aspect-h-1 rounded-lg overflow-hidden shadow-lg transition-transform duration-300 ease-in-out hover:scale-105';
                     
                     const img = document.createElement('img');
-                    // Adjust image path for GitHub Pages
-                    img.src = `${basePath}/images/${date}/${imageName}`;
+                    // Use the correct path for GitHub Pages
+                    img.src = `${repoName}/images/${date}/${imageName}`;
                     img.alt = `Hình ảnh cây ngày ${formatDate(date)}`;
                     img.className = 'w-full h-full object-cover opacity-0';
                     
@@ -100,23 +127,7 @@
                     item.appendChild(img);
                     gallery.appendChild(item);
                 });
-            } catch (error) {
-                console.error('Error loading images:', error);
-                gallery.innerHTML = '<p class="col-span-full text-center text-red-500">Đã xảy ra lỗi khi tải ảnh. Vui lòng thử lại sau.</p>';
-            }
-        }
-
-        // Modified for GitHub Pages to use a static approach
-        async function getImagesForDate(date) {
-            // You'll need to maintain this list of images manually
-            // or generate it during your build process
-            const imagesList = {
-                '3009': ['1.jpg', '2.jpg', '3.jpg'], // Example
-                '110': ['1.jpg', '2.jpg'],
-                // Add more dates and their corresponding images
-            };
-            
-            return imagesList[date] || [];
+            }, 500);
         }
 
         dates.forEach(date => {
