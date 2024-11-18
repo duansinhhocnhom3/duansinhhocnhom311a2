@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hành Trình Trồng Cây - Theo Dõi Sự Phát Triển Qua Thời Gian</title>
-    <meta name="description" content="Khám phá hành trình trồng cây của chúng tôi thông qua bộ sưu tập ảnh theo thời gian. Theo dõi sự phát triển và tăng trưởng của cây từng ngày.">
+    <title>Hành Trình Trồng Cây Ớt - Nhóm 3</title>
+    <meta name="description" content="Khám phá hành trình trồng cây ớt của nhóm 3 thông qua bộ sưu tập ảnh theo thời gian. Theo dõi sự phát triển và tăng trưởng của cây từng ngày.">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @keyframes fadeIn {
             from { opacity: 0; transform: scale(0.9); }
@@ -21,14 +22,17 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+        .custom-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
     <header class="bg-green-600 text-white py-4 px-4 sm:px-6 lg:px-8 sticky top-0 z-10 shadow-md">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <h1 class="text-2xl sm:text-3xl font-bold">Hành Trình Trồng Cây Ớt của nhóm 3</h1>
-            <button id="scrollToTop" class="bg-green-500 hover:bg-green-400 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-300 hidden">
-                ↑
+            <h1 class="text-2xl sm:text-3xl font-bold">Hành Trình Trồng Cây Ớt của Nhóm 3</h1>
+            <button id="toggleView" class="bg-green-500 hover:bg-green-400 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-300">
+                <i class="fas fa-th-large"></i>
             </button>
         </div>
     </header>
@@ -41,6 +45,23 @@
             <!-- Gallery items will be added here -->
         </div>
     </main>
+
+    <footer class="bg-green-600 text-white py-4 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto text-center">
+            <p>&copy; 2023 Nhóm 3 - Hành Trình Trồng Cây Ớt</p>
+        </div>
+    </footer>
+
+    <div id="lightbox" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden">
+        <div class="max-w-4xl w-full p-4">
+            <img id="lightboxImage" src="" alt="Enlarged image" class="max-h-[80vh] w-auto mx-auto">
+            <button id="closeLightbox" class="absolute top-4 right-4 text-white text-2xl">&times;</button>
+        </div>
+    </div>
+
+    <button id="scrollToTop" class="fixed bottom-4 right-4 bg-green-500 hover:bg-green-400 text-white font-bold p-2 rounded-full transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-300 hidden">
+        <i class="fas fa-arrow-up"></i>
+    </button>
 
     <script>
         // GitHub Pages repository name - IMPORTANT: Update this to match your repository name
@@ -73,6 +94,12 @@
         const timeline = document.getElementById('timeline');
         const gallery = document.getElementById('gallery');
         const scrollToTopBtn = document.getElementById('scrollToTop');
+        const toggleViewBtn = document.getElementById('toggleView');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImage = document.getElementById('lightboxImage');
+        const closeLightbox = document.getElementById('closeLightbox');
+
+        let isGridView = true;
 
         function formatDate(dateString) {
             const day = dateString.slice(0, -2);
@@ -83,7 +110,7 @@
         function createTimelineItem(date) {
             const button = document.createElement('button');
             button.textContent = formatDate(date);
-            button.className = 'flex-shrink-0 px-4 py-2 m-1 rounded-full text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 bg-white text-green-600 hover:bg-green-50 transition duration-300 ease-in-out transform hover:scale-105 snap-start';
+            button.className = 'flex-shrink-0 px-4 py-2 m-1 rounded-full text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 bg-white text-green-600 hover:bg-green-50 transition duration-300 ease-in-out transform hover:scale-105 snap-start custom-shadow';
             button.addEventListener('click', () => showImages(date));
             return button;
         }
@@ -111,18 +138,19 @@
 
                 images.forEach((imageName) => {
                     const item = document.createElement('div');
-                    item.className = 'relative aspect-w-1 aspect-h-1 rounded-lg overflow-hidden shadow-lg transition-transform duration-300 ease-in-out hover:scale-105';
+                    item.className = isGridView ? 'relative aspect-w-1 aspect-h-1 rounded-lg overflow-hidden shadow-lg transition-transform duration-300 ease-in-out hover:scale-105' : 'mb-4';
                     
                     const img = document.createElement('img');
-                    // Use the correct path for GitHub Pages
                     img.src = `${repoName}/images/${date}/${imageName}`;
                     img.alt = `Hình ảnh cây ngày ${formatDate(date)}`;
-                    img.className = 'w-full h-full object-cover opacity-0';
+                    img.className = isGridView ? 'w-full h-full object-cover opacity-0 cursor-pointer' : 'w-full rounded-lg shadow-lg opacity-0 cursor-pointer';
                     
                     img.onload = () => {
                         img.classList.remove('opacity-0');
                         img.classList.add('fade-in');
                     };
+
+                    img.addEventListener('click', () => openLightbox(img.src));
                     
                     item.appendChild(img);
                     gallery.appendChild(item);
@@ -130,13 +158,31 @@
             }, 500);
         }
 
+        function openLightbox(src) {
+            lightboxImage.src = src;
+            lightbox.classList.remove('hidden');
+        }
+
+        function toggleView() {
+            isGridView = !isGridView;
+            if (isGridView) {
+                gallery.classList.remove('flex', 'flex-col');
+                gallery.classList.add('grid', 'grid-cols-1', 'sm:grid-cols-2', 'md:grid-cols-3', 'lg:grid-cols-4', 'gap-4');
+                toggleViewBtn.innerHTML = '<i class="fas fa-th-large"></i>';
+            } else {
+                gallery.classList.remove('grid', 'grid-cols-1', 'sm:grid-cols-2', 'md:grid-cols-3', 'lg:grid-cols-4', 'gap-4');
+                gallery.classList.add('flex', 'flex-col');
+                toggleViewBtn.innerHTML = '<i class="fas fa-list"></i>';
+            }
+            showImages(dates[dates.length - 1]);
+        }
+
         dates.forEach(date => {
             const item = createTimelineItem(date);
             timeline.appendChild(item);
         });
 
-        // Show first date's images by default
-        showImages(dates[0]);
+        showImages(dates[dates.length - 1]);
 
         scrollToTopBtn.addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -147,6 +193,18 @@
                 scrollToTopBtn.classList.remove('hidden');
             } else {
                 scrollToTopBtn.classList.add('hidden');
+            }
+        });
+
+        toggleViewBtn.addEventListener('click', toggleView);
+
+        closeLightbox.addEventListener('click', () => {
+            lightbox.classList.add('hidden');
+        });
+
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) {
+                lightbox.classList.add('hidden');
             }
         });
     </script>
